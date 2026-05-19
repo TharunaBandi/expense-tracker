@@ -30,14 +30,4 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<Expense> getExpensesByDate(LocalDate date) {
         return expenseRepository.findByDate(date);
     }
-
-    @Override
-    public List<Expense> getExpensesByMonth(int year, int month) {
-        return expenseRepository.findByMonth(year, month);
-    }
-
-    @Override
-    public Double getMonthlyTotal(int year, int month) {
-        return expenseRepository.getMonthlyTotal(year, month);
-    }
 }
