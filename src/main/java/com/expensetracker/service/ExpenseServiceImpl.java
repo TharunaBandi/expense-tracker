@@ -33,23 +33,11 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public List<Expense> getExpensesByMonth(int year, int month) {
-        return expenseRepository.findAll();
+        return expenseRepository.findByMonth(year, month);
     }
 
     @Override
     public Double getMonthlyTotal(int year, int month) {
-        List<Expense> expenses = expenseRepository.findAll();
-
-        double total = 0;
-
-        for (Expense expense : expenses) {
-            if (expense.getDate().getYear() == year &&
-                    expense.getDate().getMonthValue() == month) {
-
-                total += expense.getAmount();
-            }
-        }
-
-        return total;
+        return expenseRepository.getMonthlyTotal(year, month);
     }
 }
