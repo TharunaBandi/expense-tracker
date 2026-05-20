@@ -10,11 +10,8 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins(
-                        "http://localhost:3000",
-                        "https://expense-tracker-lime-psi-96.vercel.app"
-                )
-                .allowedMethods("GET", "POST", "DELETE")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }
 }
