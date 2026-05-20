@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 
+const API = "https://expense-tracker-production-f35c.up.railway.app";
+
 function Dashboard({ logout }) {
   const [expenses, setExpenses] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -14,18 +16,16 @@ function Dashboard({ logout }) {
   const [year, setYear] = useState("");
   const [total, setTotal] = useState(null);
 
-  // LOAD from localStorage when page opens
-useEffect(() => {
-  const savedExpenses = localStorage.getItem("expenses");
-  if (savedExpenses) {
-    setExpenses(JSON.parse(savedExpenses));
-  }
-}, []);
-
-// SAVE to localStorage whenever expenses change
-useEffect(() => {
-  localStorage.setItem("expenses", JSON.stringify(expenses));
-}, [expenses]);
+  // LOAD from backend
+  useEffect(() => {
+    fetch(`${API}/api/expenses`)
+      .then(res => res.json())
+      .then(data => {
+        setExpenses(data);
+        setFiltered(data);
+      })
+      .catch(err => console.error("Failed to load expenses", err));
+  }, []);
 
   useEffect(() => {
     setFiltered(expenses);
@@ -37,13 +37,31 @@ useEffect(() => {
       return;
     }
 
-    const newExp = { title, category, amount, date };
-    setExpenses([...expenses, newExp]);
+    const newExp = { title, category, amount: Number(amount), date };
 
-    setTitle("");
-    setCategory("");
-    setAmount("");
-    setDate("");
+    fetch(`${API}/api/expenses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newExp),
+    })
+      .then(res => res.json())
+      .then(saved => {
+        setExpenses(prev => [...prev, saved]);
+        setTitle("");
+        setCategory("");
+        setAmount("");
+        setDate("");
+      })
+      .catch(err => console.error("Failed to add expense", err));
+  };
+
+  const deleteExpense = (id) => {
+    fetch(`${API}/api/expenses/${id}`, { method: "DELETE" })
+      .then(() => {
+        setExpenses(prev => prev.filter(e => e.id !== id));
+        setFiltered(prev => prev.filter(e => e.id !== id));
+      })
+      .catch(err => console.error("Failed to delete expense", err));
   };
 
   const applyFilter = () => {
@@ -69,12 +87,6 @@ useEffect(() => {
     setMonth("");
     setYear("");
     setTotal(null);
-  };
-
-  const deleteExpense = (index) => {
-    const updated = expenses.filter((_, i) => i !== index);
-    setExpenses(updated);
-    setFiltered(updated);
   };
 
   return (
@@ -119,16 +131,15 @@ useEffect(() => {
             <th>Action</th>
           </tr>
         </thead>
-
         <tbody>
-          {filtered.map((e, i) => (
-            <tr key={i}>
+          {filtered.map((e) => (
+            <tr key={e.id}>
               <td>{e.title}</td>
               <td>{e.category}</td>
-              <td style={{ color: "green",fontWeight: 650 }}>₹ {e.amount}</td>
+              <td style={{ color: "green", fontWeight: 650 }}>₹ {e.amount}</td>
               <td>{e.date}</td>
               <td>
-                <button className="delete-btn" onClick={() => deleteExpense(i)}>
+                <button className="delete-btn" onClick={() => deleteExpense(e.id)}>
                   Delete
                 </button>
               </td>
