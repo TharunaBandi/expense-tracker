@@ -47,5 +47,8 @@ public class ExpenseController {
         return expenseService.getMonthlyTotal(year, month);
     }
 
-
+    @DeleteMapping("/{id}")
+    public void deleteExpense(@PathVariable Long id) {
+        expenseService.deleteExpense(id);
+    }
 }

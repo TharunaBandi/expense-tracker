@@ -40,4 +40,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     public Double getMonthlyTotal(int year, int month) {
         return expenseRepository.getMonthlyTotal(year, month);
     }
+
+    @Override
+    public void deleteExpense(Long id) {
+        expenseRepository.deleteById(id);
+    }
 }

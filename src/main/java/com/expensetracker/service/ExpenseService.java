@@ -15,4 +15,6 @@ public interface ExpenseService {
     List<Expense> getExpensesByMonth(int year, int month);
 
     Double getMonthlyTotal(int year, int month);
+
+    void deleteExpense(Long id);
 }
