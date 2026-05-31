@@ -11,10 +11,13 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     List<Expense> findByDate(LocalDate date);
 
-    @Query("SELECT e FROM Expense e WHERE YEAR(e.date) = :year AND MONTH(e.date) = :month")
-    List<Expense> findByMonth(int year, int month);
+    List<Expense> findByUserId(Long userId);
 
-    @Query("SELECT SUM(e.amount) FROM Expense e WHERE YEAR(e.date) = :year AND MONTH(e.date) = :month")
-    Double getMonthlyTotal(int year, int month);
+    void deleteByUserId(Long userId);
 
+    @Query("SELECT e FROM Expense e WHERE YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.userId = :userId")
+    List<Expense> findByMonth(int year, int month, Long userId);
+
+    @Query("SELECT SUM(e.amount) FROM Expense e WHERE YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.userId = :userId")
+    Double getMonthlyTotal(int year, int month, Long userId);
 }

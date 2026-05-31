@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../App.css";
 
-const API = process.env.REACT_APP_API_URL || "https://expense-tracker-production-f35c.up.railway.app";
+const API = "http://localhost:8080";
 
 function Login({ onLogin, onSwitchToRegister }) {
   const [username, setUsername] = useState("");

@@ -4,7 +4,6 @@ import com.expensetracker.model.Expense;
 import com.expensetracker.service.ExpenseService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,31 +23,28 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public List<Expense> getAllExpenses() {
-        return expenseService.getAllExpenses();
-    }
-
-    @GetMapping("/date")
-    public List<Expense> getByDate(@RequestParam String date) {
-        return expenseService.getExpensesByDate(LocalDate.parse(date));
-    }
-
-    @GetMapping("/month")
-    public List<Expense> getByMonth(
-            @RequestParam int year,
-            @RequestParam int month) {
-        return expenseService.getExpensesByMonth(year, month);
-    }
-
-    @GetMapping("/month/total")
-    public Double getMonthlyTotal(
-            @RequestParam int year,
-            @RequestParam int month) {
-        return expenseService.getMonthlyTotal(year, month);
+    public List<Expense> getAllExpenses(@RequestParam Long userId) {
+        return expenseService.getAllExpenses(userId);
     }
 
     @DeleteMapping("/{id}")
     public void deleteExpense(@PathVariable Long id) {
         expenseService.deleteExpense(id);
+    }
+
+    @GetMapping("/month")
+    public List<Expense> getByMonth(
+            @RequestParam int year,
+            @RequestParam int month,
+            @RequestParam Long userId) {
+        return expenseService.getExpensesByMonth(year, month, userId);
+    }
+
+    @GetMapping("/month/total")
+    public Double getMonthlyTotal(
+            @RequestParam int year,
+            @RequestParam int month,
+            @RequestParam Long userId) {
+        return expenseService.getMonthlyTotal(year, month, userId);
     }
 }

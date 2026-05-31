@@ -22,8 +22,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> getAllExpenses() {
-        return expenseRepository.findAll();
+    public List<Expense> getAllExpenses(Long userId) {
+        return expenseRepository.findByUserId(userId);
     }
 
     @Override
@@ -32,13 +32,13 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> getExpensesByMonth(int year, int month) {
-        return expenseRepository.findByMonth(year, month);
+    public List<Expense> getExpensesByMonth(int year, int month, Long userId) {
+        return expenseRepository.findByMonth(year, month, userId);
     }
 
     @Override
-    public Double getMonthlyTotal(int year, int month) {
-        return expenseRepository.getMonthlyTotal(year, month);
+    public Double getMonthlyTotal(int year, int month, Long userId) {
+        return expenseRepository.getMonthlyTotal(year, month, userId);
     }
 
     @Override

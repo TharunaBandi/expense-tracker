@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 
-const API = "https://expense-tracker-production-f35c.up.railway.app";
+const API = "http://localhost:8080";
 
 function Dashboard({ logout, userId, username }) {
   const [expenses, setExpenses] = useState([]);
@@ -89,11 +89,47 @@ function Dashboard({ logout, userId, username }) {
 
   return (
     <div className="container">
-      <div className="header">
-        <h1>Expense Tracker</h1>
-        <span style={{ color: "#a78bfa", marginRight: "10px" }}>Hi, {username}!</span>
-        <button className="logout-btn" onClick={logout}>Logout</button>
-      </div>
+        <div style={{
+          textAlign: "left",
+          marginBottom: "4px",
+          paddingLeft: "4px"
+        }}>
+          <span style={{
+            color: "#a78bfa",
+            fontWeight: "bold",
+            fontSize: "14px",
+          }}>👤 Hi, {username}!</span>
+        </div>
+
+        <div className="header">
+          <h1>Expense Tracker</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span style={{
+              color: "#a78bfa",
+              fontWeight: "bold",
+              fontSize: "14px"
+            }}>👤 Hi, {username}!</span>
+            <button
+              className="logout-btn"
+              style={{ backgroundColor: "#ef4444" }}
+              onClick={() => {
+                if (window.confirm("Are you sure you want to delete your account? All your expenses will be permanently deleted!")) {
+                  fetch(`${API}/api/auth/delete/${userId}`, { method: "DELETE" })
+                    .then(() => {
+                      alert("Account deleted successfully!");
+                      logout();
+                    })
+                    .catch(err => console.error("Failed to delete account", err));
+                }
+              }}
+            >
+              Delete Account
+            </button>
+            <button className="logout-btn" onClick={logout}>Logout</button>
+          </div>
+        </div>
+
+
 
       <div className="form-row">
         <input placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
