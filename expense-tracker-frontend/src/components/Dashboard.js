@@ -3,29 +3,27 @@ import "../App.css";
 
 const API = "https://expense-tracker-production-f35c.up.railway.app";
 
-function Dashboard({ logout }) {
+function Dashboard({ logout, userId, username }) {
   const [expenses, setExpenses] = useState([]);
   const [filtered, setFiltered] = useState([]);
-
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
-
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [total, setTotal] = useState(null);
 
-  // LOAD from backend
+  // LOAD from backend — filtered by userId
   useEffect(() => {
-    fetch(`${API}/api/expenses`)
+    fetch(`${API}/api/expenses?userId=${userId}`)
       .then(res => res.json())
       .then(data => {
         setExpenses(data);
         setFiltered(data);
       })
       .catch(err => console.error("Failed to load expenses", err));
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     setFiltered(expenses);
@@ -37,7 +35,7 @@ function Dashboard({ logout }) {
       return;
     }
 
-    const newExp = { title, category, amount: Number(amount), date };
+    const newExp = { title, category, amount: Number(amount), date, userId };
 
     fetch(`${API}/api/expenses`, {
       method: "POST",
@@ -93,6 +91,7 @@ function Dashboard({ logout }) {
     <div className="container">
       <div className="header">
         <h1>Expense Tracker</h1>
+        <span style={{ color: "#a78bfa", marginRight: "10px" }}>Hi, {username}!</span>
         <button className="logout-btn" onClick={logout}>Logout</button>
       </div>
 

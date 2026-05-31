@@ -1,24 +1,35 @@
 import React, { useState } from "react";
 import Login from "./components/Login";
+import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [screen, setScreen] = useState("login");
+  const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState("");
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
+  const handleLogin = (id, name) => {
+    setUserId(id);
+    setUsername(name);
+    setScreen("dashboard");
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    setUserId(null);
+    setUsername("");
+    setScreen("login");
   };
 
   return (
     <>
-      {isLoggedIn ? (
-        <Dashboard logout={handleLogout} />
-      ) : (
-        <Login onLogin={handleLogin} />
+      {screen === "login" && (
+        <Login onLogin={handleLogin} onSwitchToRegister={() => setScreen("register")} />
+      )}
+      {screen === "register" && (
+        <Register onSwitchToLogin={() => setScreen("login")} />
+      )}
+      {screen === "dashboard" && (
+        <Dashboard logout={handleLogout} userId={userId} username={username} />
       )}
     </>
   );

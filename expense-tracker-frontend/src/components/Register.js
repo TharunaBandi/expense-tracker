@@ -3,17 +3,17 @@ import "../App.css";
 
 const API = process.env.REACT_APP_API_URL || "https://expense-tracker-production-f35c.up.railway.app";
 
-function Login({ onLogin, onSwitchToRegister }) {
+function Register({ onSwitchToLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
+  const handleRegister = () => {
     if (!username || !password) {
       alert("Please enter username and password");
       return;
     }
 
-    fetch(`${API}/api/auth/login`, {
+    fetch(`${API}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -22,16 +22,17 @@ function Login({ onLogin, onSwitchToRegister }) {
         if (!res.ok) return res.text().then(t => { throw new Error(t); });
         return res.json();
       })
-      .then(data => {
-        onLogin(data.id, data.username);
+      .then(() => {
+        alert("Registered successfully! Please login.");
+        onSwitchToLogin();
       })
-      .catch(err => alert("Login failed: " + err.message));
+      .catch(err => alert("Registration failed: " + err.message));
   };
 
   return (
     <div className="login-page">
       <div className="login-card">
-        <h2>Expense Tracker Login</h2>
+        <h2>Create Account</h2>
         <input
           type="text"
           placeholder="Username"
@@ -44,14 +45,14 @@ function Login({ onLogin, onSwitchToRegister }) {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleRegister}>Register</button>
         <p style={{textAlign:"center", marginTop:"10px", cursor:"pointer", color:"#a78bfa"}}
-           onClick={onSwitchToRegister}>
-          Don't have an account? Register
+           onClick={onSwitchToLogin}>
+          Already have an account? Login
         </p>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Register;
