@@ -103,12 +103,7 @@ function Dashboard({ logout, userId, username }) {
 
         <div className="header">
           <h1>Expense Tracker</h1>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span style={{
-              color: "#a78bfa",
-              fontWeight: "bold",
-              fontSize: "14px"
-            }}>👤 Hi, {username}!</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <button
               className="logout-btn"
               style={{ backgroundColor: "#ef4444" }}
@@ -122,9 +117,7 @@ function Dashboard({ logout, userId, username }) {
                     .catch(err => console.error("Failed to delete account", err));
                 }
               }}
-            >
-              Delete Account
-            </button>
+            >Delete Account</button>
             <button className="logout-btn" onClick={logout}>Logout</button>
           </div>
         </div>
