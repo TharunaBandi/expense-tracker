@@ -54,7 +54,7 @@ body {
 
 .login-card button:hover {
   background: #4338ca;
-  transition: 0.75;
+  transition: 0.75s;
 }
 
 /* ===== DASHBOARD ===== */
@@ -70,20 +70,24 @@ body {
 /* Header */
 .header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  position: relative;
   margin-bottom: 25px;
 }
 
 .header h1 {
   margin: 0;
+  padding-left: 275px;
   font-size: 35px;
 }
 
+.btn-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .logout-btn {
-  position: absolute;
-  right: 0;
   padding: 11px 18px;
   background: #4f46e5;
   color: white;
@@ -91,9 +95,10 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
-.logout-btn:hover{
+
+.logout-btn:hover {
   background: #4338ca;
-  transition: 0.75;
+  transition: 0.75s;
 }
 
 /* Add row */
@@ -120,7 +125,8 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
-.add-btn:hover,.filter-btn:hover{
+
+.add-btn:hover, .filter-btn:hover {
   background: #4338ca;
   transition: 0.75s;
 }
@@ -134,10 +140,9 @@ body {
   cursor: pointer;
 }
 
-.reset-btn:active
-{
+.reset-btn:active {
   background: grey;
-  transition: 0.75;
+  transition: 0.75s;
 }
 
 /* Filter row */
@@ -193,6 +198,6 @@ tbody tr {
 }
 
 .delete-btn:hover {
- background: #4338ca;
+  background: #4338ca;
   transition: 0.75s;
 }

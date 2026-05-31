@@ -14,7 +14,6 @@ function Dashboard({ logout, userId, username }) {
   const [year, setYear] = useState("");
   const [total, setTotal] = useState(null);
 
-  // LOAD from backend — filtered by userId
   useEffect(() => {
     fetch(`${API}/api/expenses?userId=${userId}`)
       .then(res => res.json())
@@ -34,9 +33,7 @@ function Dashboard({ logout, userId, username }) {
       alert("Fill all fields");
       return;
     }
-
     const newExp = { title, category, amount: Number(amount), date, userId };
-
     fetch(`${API}/api/expenses`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -62,12 +59,22 @@ function Dashboard({ logout, userId, username }) {
       .catch(err => console.error("Failed to delete expense", err));
   };
 
+  const deleteAccount = () => {
+    if (window.confirm("Are you sure you want to delete your account? All your expenses will be permanently deleted!")) {
+      fetch(`${API}/api/auth/delete/${userId}`, { method: "DELETE" })
+        .then(() => {
+          alert("Account deleted successfully!");
+          logout();
+        })
+        .catch(err => console.error("Failed to delete account", err));
+    }
+  };
+
   const applyFilter = () => {
     if (!month || !year) {
       alert("Select month & year");
       return;
     }
-
     const result = expenses.filter((e) => {
       const d = new Date(e.date);
       return (
@@ -75,7 +82,6 @@ function Dashboard({ logout, userId, username }) {
         d.getFullYear() === parseInt(year)
       );
     });
-
     setFiltered(result);
     setTotal(result.reduce((s, e) => s + Number(e.amount), 0));
   };
@@ -89,40 +95,27 @@ function Dashboard({ logout, userId, username }) {
 
   return (
     <div className="container">
-        <div style={{
-          textAlign: "left",
-          marginBottom: "4px",
-          paddingLeft: "4px"
-        }}>
-          <span style={{
-            color: "#a78bfa",
-            fontWeight: "bold",
-            fontSize: "14px",
-          }}>👤 Hi, {username}!</span>
+      <div style={{ textAlign: "left", marginBottom: "4px", paddingLeft: "4px" }}>
+        <span style={{ color: "#a78bfa", fontWeight: "bold", fontSize: "14px" }}>
+          👤 Hi, {username}!
+        </span>
+      </div>
+
+      <div className="header">
+        <h1>Expense Tracker</h1>
+        <div className="btn-group">
+          <button
+            className="logout-btn"
+            style={{ backgroundColor: "#ef4444" }}
+            onClick={deleteAccount}
+          >
+            Delete Account
+          </button>
+          <button className="logout-btn" onClick={logout}>
+            Logout
+          </button>
         </div>
-
-        <div className="header">
-          <h1>Expense Tracker</h1>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <button
-              className="logout-btn"
-              style={{ backgroundColor: "#ef4444" }}
-              onClick={() => {
-                if (window.confirm("Are you sure you want to delete your account? All your expenses will be permanently deleted!")) {
-                  fetch(`${API}/api/auth/delete/${userId}`, { method: "DELETE" })
-                    .then(() => {
-                      alert("Account deleted successfully!");
-                      logout();
-                    })
-                    .catch(err => console.error("Failed to delete account", err));
-                }
-              }}
-            >Delete Account</button>
-            <button className="logout-btn" onClick={logout}>Logout</button>
-          </div>
-        </div>
-
-
+      </div>
 
       <div className="form-row">
         <input placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
@@ -141,7 +134,6 @@ function Dashboard({ logout, userId, username }) {
             </option>
           ))}
         </select>
-
         <input placeholder="Year" value={year} onChange={e => setYear(e.target.value)} />
         <button className="filter-btn" onClick={applyFilter}>Filter</button>
         <button className="reset-btn" onClick={resetFilter}>Reset</button>
