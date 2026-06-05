@@ -10,7 +10,7 @@ public class BrowserLauncher implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         try {
-            String url = "http://localhost:8081";
+            String url = "http://localhost:3000";
 
             // Windows command to open default browser (Chrome)
             new ProcessBuilder(

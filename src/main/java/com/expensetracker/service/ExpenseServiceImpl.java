@@ -17,6 +17,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    public Expense updateExpense(Expense expense) {
+        return expenseRepository.save(expense);
+    }
+
+    @Override
     public Expense addExpense(Expense expense) {
         return expenseRepository.save(expense);
     }

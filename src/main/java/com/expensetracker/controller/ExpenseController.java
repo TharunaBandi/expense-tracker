@@ -47,4 +47,10 @@ public class ExpenseController {
             @RequestParam Long userId) {
         return expenseService.getMonthlyTotal(year, month, userId);
     }
+
+    @PutMapping("/{id}")
+    public Expense updateExpense(@PathVariable Long id, @RequestBody Expense expense) {
+        expense.setId(id);
+        return expenseService.updateExpense(expense);
+    }
 }

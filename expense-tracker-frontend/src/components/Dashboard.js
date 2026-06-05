@@ -14,6 +14,13 @@ function Dashboard({ logout, userId, username }) {
   const [year, setYear] = useState("");
   const [total, setTotal] = useState(null);
 
+  // Edit state
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editCategory, setEditCategory] = useState("");
+  const [editAmount, setEditAmount] = useState("");
+  const [editDate, setEditDate] = useState("");
+
   useEffect(() => {
     fetch(`${API}/api/expenses?userId=${userId}`)
       .then(res => res.json())
@@ -57,6 +64,34 @@ function Dashboard({ logout, userId, username }) {
         setFiltered(prev => prev.filter(e => e.id !== id));
       })
       .catch(err => console.error("Failed to delete expense", err));
+  };
+
+  const startEdit = (e) => {
+    setEditingId(e.id);
+    setEditTitle(e.title);
+    setEditCategory(e.category);
+    setEditAmount(e.amount);
+    setEditDate(e.date);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+  };
+
+  const saveEdit = (id) => {
+    const updated = { title: editTitle, category: editCategory, amount: Number(editAmount), date: editDate, userId };
+    fetch(`${API}/api/expenses/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    })
+      .then(res => res.json())
+      .then(saved => {
+        setExpenses(prev => prev.map(e => e.id === id ? saved : e));
+        setFiltered(prev => prev.map(e => e.id === id ? saved : e));
+        setEditingId(null);
+      })
+      .catch(err => console.error("Failed to update expense", err));
   };
 
   const deleteAccount = () => {
@@ -111,9 +146,7 @@ function Dashboard({ logout, userId, username }) {
           >
             Delete Account
           </button>
-          <button className="logout-btn" onClick={logout}>
-            Logout
-          </button>
+          <button className="logout-btn" onClick={logout}>Logout</button>
         </div>
       </div>
 
@@ -154,15 +187,29 @@ function Dashboard({ logout, userId, username }) {
         <tbody>
           {filtered.map((e) => (
             <tr key={e.id}>
-              <td>{e.title}</td>
-              <td>{e.category}</td>
-              <td style={{ color: "green", fontWeight: 650 }}>₹ {e.amount}</td>
-              <td>{e.date}</td>
-              <td>
-                <button className="delete-btn" onClick={() => deleteExpense(e.id)}>
-                  Delete
-                </button>
-              </td>
+              {editingId === e.id ? (
+                <>
+                  <td><input value={editTitle} onChange={e => setEditTitle(e.target.value)} style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }} /></td>
+                  <td><input value={editCategory} onChange={e => setEditCategory(e.target.value)} style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }} /></td>
+                  <td><input value={editAmount} onChange={e => setEditAmount(e.target.value)} style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }} /></td>
+                  <td><input type="date" value={editDate} onChange={e => setEditDate(e.target.value)} style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }} /></td>
+                  <td style={{ display: "flex", gap: "6px", justifyContent: "center" }}>
+                    <button className="add-btn" style={{ padding: "8px 12px" }} onClick={() => saveEdit(e.id)}>Save</button>
+                    <button className="reset-btn" style={{ padding: "8px 12px" }} onClick={cancelEdit}>Cancel</button>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td>{e.title}</td>
+                  <td>{e.category}</td>
+                  <td style={{ color: "green", fontWeight: 650 }}>₹ {e.amount}</td>
+                  <td>{e.date}</td>
+                  <td style={{ display: "flex", gap: "6px", justifyContent: "center" }}>
+                    <button className="delete-btn" style={{ backgroundColor: "#f59e0b" }} onClick={() => startEdit(e)}>Edit</button>
+                    <button className="delete-btn" onClick={() => deleteExpense(e.id)}>Delete</button>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>
