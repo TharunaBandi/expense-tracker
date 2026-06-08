@@ -24,6 +24,7 @@ function Login({ onLogin, onSwitchToRegister }) {
         return res.json();
       })
       .then(data => {
+        localStorage.setItem("token", data.token);
         onLogin(data.id, data.username);
       })
       .catch(err => alert("Login failed: " + err.message));

@@ -14,15 +14,21 @@ function Dashboard({ logout, userId, username }) {
   const [year, setYear] = useState("");
   const [total, setTotal] = useState(null);
 
-  // Edit state
   const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editCategory, setEditCategory] = useState("");
   const [editAmount, setEditAmount] = useState("");
   const [editDate, setEditDate] = useState("");
 
+  const getHeaders = () => ({
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${localStorage.getItem("token")}`
+  });
+
   useEffect(() => {
-    fetch(`${API}/api/expenses?userId=${userId}`)
+    fetch(`${API}/api/expenses?userId=${userId}`, {
+      headers: getHeaders()
+    })
       .then(res => res.json())
       .then(data => {
         setExpenses(data);
@@ -43,7 +49,7 @@ function Dashboard({ logout, userId, username }) {
     const newExp = { title, category, amount: Number(amount), date, userId };
     fetch(`${API}/api/expenses`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(newExp),
     })
       .then(res => res.json())
@@ -58,7 +64,10 @@ function Dashboard({ logout, userId, username }) {
   };
 
   const deleteExpense = (id) => {
-    fetch(`${API}/api/expenses/${id}`, { method: "DELETE" })
+    fetch(`${API}/api/expenses/${id}`, {
+      method: "DELETE",
+      headers: getHeaders()
+    })
       .then(() => {
         setExpenses(prev => prev.filter(e => e.id !== id));
         setFiltered(prev => prev.filter(e => e.id !== id));
@@ -79,10 +88,16 @@ function Dashboard({ logout, userId, username }) {
   };
 
   const saveEdit = (id) => {
-    const updated = { title: editTitle, category: editCategory, amount: Number(editAmount), date: editDate, userId };
+    const updated = {
+      title: editTitle,
+      category: editCategory,
+      amount: Number(editAmount),
+      date: editDate,
+      userId
+    };
     fetch(`${API}/api/expenses/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(updated),
     })
       .then(res => res.json())
@@ -96,7 +111,10 @@ function Dashboard({ logout, userId, username }) {
 
   const deleteAccount = () => {
     if (window.confirm("Are you sure you want to delete your account? All your expenses will be permanently deleted!")) {
-      fetch(`${API}/api/auth/delete/${userId}`, { method: "DELETE" })
+      fetch(`${API}/api/auth/delete/${userId}`, {
+        method: "DELETE",
+        headers: getHeaders()
+      })
         .then(() => {
           alert("Account deleted successfully!");
           logout();
@@ -189,10 +207,35 @@ function Dashboard({ logout, userId, username }) {
             <tr key={e.id}>
               {editingId === e.id ? (
                 <>
-                  <td><input value={editTitle} onChange={e => setEditTitle(e.target.value)} style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }} /></td>
-                  <td><input value={editCategory} onChange={e => setEditCategory(e.target.value)} style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }} /></td>
-                  <td><input value={editAmount} onChange={e => setEditAmount(e.target.value)} style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }} /></td>
-                  <td><input type="date" value={editDate} onChange={e => setEditDate(e.target.value)} style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }} /></td>
+                  <td>
+                    <input
+                      value={editTitle}
+                      onChange={e => setEditTitle(e.target.value)}
+                      style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      value={editCategory}
+                      onChange={e => setEditCategory(e.target.value)}
+                      style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      value={editAmount}
+                      onChange={e => setEditAmount(e.target.value)}
+                      style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      value={editDate}
+                      onChange={e => setEditDate(e.target.value)}
+                      style={{ width: "100%", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }}
+                    />
+                  </td>
                   <td style={{ display: "flex", gap: "6px", justifyContent: "center" }}>
                     <button className="add-btn" style={{ padding: "8px 12px" }} onClick={() => saveEdit(e.id)}>Save</button>
                     <button className="reset-btn" style={{ padding: "8px 12px" }} onClick={cancelEdit}>Cancel</button>
@@ -205,8 +248,19 @@ function Dashboard({ logout, userId, username }) {
                   <td style={{ color: "green", fontWeight: 650 }}>₹ {e.amount}</td>
                   <td>{e.date}</td>
                   <td style={{ display: "flex", gap: "6px", justifyContent: "center" }}>
-                    <button className="delete-btn" style={{ backgroundColor: "#f59e0b" }} onClick={() => startEdit(e)}>Edit</button>
-                    <button className="delete-btn" onClick={() => deleteExpense(e.id)}>Delete</button>
+                    <button
+                      className="delete-btn"
+                      style={{ backgroundColor: "#f59e0b" }}
+                      onClick={() => startEdit(e)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteExpense(e.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </>
               )}

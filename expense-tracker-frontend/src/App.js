@@ -15,6 +15,7 @@ function App() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     setUserId(null);
     setUsername("");
     setScreen("login");

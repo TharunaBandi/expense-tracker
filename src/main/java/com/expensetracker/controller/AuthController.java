@@ -1,5 +1,6 @@
 package com.expensetracker.controller;
 
+import com.expensetracker.config.JwtUtil;
 import com.expensetracker.model.User;
 import com.expensetracker.repository.ExpenseRepository;
 import com.expensetracker.repository.UserRepository;
@@ -17,10 +18,14 @@ public class AuthController {
 
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(UserRepository userRepository, ExpenseRepository expenseRepository) {
+    public AuthController(UserRepository userRepository,
+                          ExpenseRepository expenseRepository,
+                          JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.expenseRepository = expenseRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -39,7 +44,12 @@ public class AuthController {
             return ResponseEntity.status(401).body("Invalid username or password");
         }
         User u = found.get();
-        return ResponseEntity.ok(Map.of("id", u.getId(), "username", u.getUsername()));
+        String token = jwtUtil.generateToken(u.getId(), u.getUsername());
+        return ResponseEntity.ok(Map.of(
+                "id", u.getId(),
+                "username", u.getUsername(),
+                "token", token
+        ));
     }
 
     @DeleteMapping("/delete/{userId}")
