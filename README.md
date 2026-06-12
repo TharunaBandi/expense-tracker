@@ -1,206 +1,106 @@
-# Expense Tracker
+# 💸 Expense Tracker
 
-A full-stack Expense Tracker web application built using React, Spring Boot, and MySQL. The application allows users to register, login, and manage personal expenses securely. Each user can access and manage only their own expenses through JWT-based authentication and user-specific data management.
+A full-stack web application to track personal expenses with secure user authentication, built with **React**, **Spring Boot**, and **MySQL**.
 
----
-
-# Tech Stack
-
-## Frontend
-
-* React
-* JavaScript
-* HTML
-* CSS
-
-## Backend
-
-* Java
-* Spring Boot
-* REST APIs
-* JWT Authentication
-
-## Database
-
-* MySQL
-* Spring Data JPA
-* Hibernate
-
-## Tools
-
-* Maven
-* Git
-* GitHub
-* Postman
+> 🖥️ Runs locally — see setup instructions below.
 
 ---
 
-# Features
+## 📸 Screenshots
 
-## Authentication & Security
-
-* User Registration
-* User Login
-* JWT-Based Authentication
-* Protected API Endpoints
-* Logout Functionality
-* Delete Account Feature
-* Password Show/Hide Toggle
-
-## Expense Management
-
-* Add Expense
-* View Expenses
-* Edit Expenses
-* Delete Expenses
-* User-Specific Expense Tracking
-
-## Expense Analysis
-
-* Filter Expenses by Month
-* Filter Expenses by Year
-* Monthly Expense Calculation
-
-## User Experience
-
-* Responsive User Interface
-* Inline Expense Editing
-* Real-Time Updates After CRUD Operations
+> _Add screenshots of your login page, dashboard, and expense list here._
 
 ---
 
-# Architecture
+## ✨ Features
 
-The application follows a layered architecture pattern:
-
-### Controller Layer
-
-Handles incoming HTTP requests and sends responses.
-
-### Service Layer
-
-Contains business logic and application processing.
-
-### Repository Layer
-
-Handles database operations using Spring Data JPA.
-
-### Model Layer
-
-Represents application entities and database tables.
-
-### Application Flow
-
-React Frontend
-
-↓
-
-REST API Requests
-
-↓
-
-Controller Layer
-
-↓
-
-Service Layer
-
-↓
-
-Repository Layer
-
-↓
-
-MySQL Database
+- 🔐 **JWT Authentication** — Secure register/login with token-based auth; each user sees only their own data
+- ➕ **Add Expenses** — Log expenses with amount, category, date, and description
+- ✏️ **Inline Edit** — Edit any expense directly in the list without page reload
+- 🗑️ **Delete Expense** — Remove individual expense entries
+- 📅 **Filter by Month/Year** — View expenses for a specific time period
+- 💰 **Total Calculation** — Auto-calculates total expenses shown at the bottom
+- 👁️ **Show/Hide Password** — Toggle password visibility on login/register
+- ❌ **Delete Account** — Permanently delete account and all associated data
+- 📱 **Responsive UI** — Works on both desktop and mobile
 
 ---
 
-# JWT Authentication Flow
+## 🛠️ Tech Stack
 
-1. User enters username and password.
-2. Backend validates user credentials.
-3. JWT token is generated upon successful login.
-4. Token is returned to the frontend.
-5. Frontend stores the token in localStorage.
-6. Token is sent in the Authorization header for protected API requests.
-7. JwtFilter validates the token before granting access to secured endpoints.
-
----
-
-# API Endpoints
-
-| Method | Endpoint                  | Description                 |
-| ------ | ------------------------- | --------------------------- |
-| POST   | /api/auth/register        | Register a new user         |
-| POST   | /api/auth/login           | Login and receive JWT token |
-| DELETE | /api/auth/delete/{userId} | Delete user account         |
-| GET    | /api/expenses?userId={id} | Get all expenses            |
-| POST   | /api/expenses             | Add expense                 |
-| PUT    | /api/expenses/{id}        | Update expense              |
-| DELETE | /api/expenses/{id}        | Delete expense              |
+| Layer      | Technology                          |
+|------------|--------------------------------------|
+| Frontend   | React, JavaScript, CSS, HTML         |
+| Backend    | Java, Spring Boot, REST APIs         |
+| Database   | MySQL, Spring Data JPA, Hibernate    |
+| Auth       | JWT (jjwt 0.11.5), Spring Security   |
+| Tools      | Maven, Git, GitHub, Postman          |
 
 ---
 
-# Project Structure
-
-expense-tracker
-
-├── expense-tracker-frontend
-
-│   ├── src
-
-│   │   ├── App.js
-
-│   │   ├── App.css
-
-│   │   └── components
-
-│   │       ├── Login.js
-
-│   │       ├── Register.js
-
-│   │       └── Dashboard.js
-
-│
-
-└── src/main/java/com/expensetracker
+## 🏗️ Project Architecture
 
 ```
-├── controller
-
-├── service
-
-├── repository
-
-├── model
-
-└── config
+expense-tracker/
+├── src/                        # Spring Boot Backend
+│   └── main/java/
+│       ├── controller/         # REST API Controllers
+│       ├── service/            # Business Logic
+│       ├── repository/         # Spring Data JPA Repositories
+│       └── model/              # Entity Classes (User, Expense)
+└── expense-tracker-frontend/   # React Frontend
+    └── src/
+        ├── components/         # React Components
+        └── App.js
 ```
 
 ---
 
-# How to Run
+## 🚀 Getting Started
 
-## Clone Repository
+### Prerequisites
+
+- Java 17+
+- Node.js 18+
+- MySQL 8+
+- Maven
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/TharunaBandi/expense-tracker.git
 cd expense-tracker
 ```
 
-## Backend Setup
+### 2. Set Up the Database
+
+Open MySQL and run:
+
+```sql
+CREATE DATABASE expense_tracker;
+```
+
+### 3. Configure Backend
+
+Edit `src/main/resources/application.properties`:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/expense_tracker
+spring.datasource.username=your_mysql_username
+spring.datasource.password=your_mysql_password
+spring.jpa.hibernate.ddl-auto=update
+jwt.secret=your_jwt_secret_key
+```
+
+### 4. Run the Backend
 
 ```bash
-mvn clean spring-boot:run
+./mvnw spring-boot:run
 ```
 
-Backend runs on:
+Backend starts at `http://localhost:8080`
 
-```text
-http://localhost:8080
-```
-
-## Frontend Setup
+### 5. Run the Frontend
 
 ```bash
 cd expense-tracker-frontend
@@ -208,73 +108,26 @@ npm install
 npm start
 ```
 
-Frontend runs on:
-
-```text
-http://localhost:3000
-```
+Frontend starts at `http://localhost:3000`
 
 ---
 
-# Prerequisites
+## 🔌 API Endpoints
 
-* Java 21+
-* MySQL
-* Maven
-* Node.js and npm
-
----
-
-# Database Setup
-
-Create a database:
-
-```sql
-CREATE DATABASE expense_db;
-```
-
-Update:
-
-```text
-src/main/resources/application.properties
-```
-
-with your MySQL credentials.
-
-Example:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/expense_db
-spring.datasource.username=root
-spring.datasource.password=your_password
-```
+| Method | Endpoint                  | Description              | Auth Required |
+|--------|---------------------------|--------------------------|---------------|
+| POST   | `/api/auth/register`      | Register a new user      | No            |
+| POST   | `/api/auth/login`         | Login and receive JWT    | No            |
+| GET    | `/api/expenses`           | Get all user expenses    | Yes           |
+| POST   | `/api/expenses`           | Add a new expense        | Yes           |
+| PUT    | `/api/expenses/{id}`      | Update an expense        | Yes           |
+| DELETE | `/api/expenses/{id}`      | Delete an expense        | Yes           |
+| DELETE | `/api/auth/delete-account`| Delete user account      | Yes           |
 
 ---
 
-# Key Concepts Demonstrated
+## 👩‍💻 Author
 
-* Full-Stack Development
-* REST API Development
-* JWT Authentication
-* CRUD Operations
-* Spring Boot Layered Architecture
-* Spring Data JPA
-* Database Integration
-* React State Management
-* Client-Server Architecture
-* Git Version Control
-
----
-
-# Screenshots
-
-Register → Login → Dashboard → Add Expense → Filter Expenses → Edit Expense → Delete Expense
-
----
-
-# Author
-
-Bandi Tharuna Sri
-
-GitHub:
-https://github.com/TharunaBandi
+**Bandi Tharuna Sri**
+- GitHub: [@TharunaBandi](https://github.com/TharunaBandi)
+- Email: banditharuna@gmail.com
