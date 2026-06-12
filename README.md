@@ -40,7 +40,7 @@ A full-stack web application to track personal expenses with secure user authent
 | Frontend   | React, JavaScript, CSS, HTML         |
 | Backend    | Java, Spring Boot, REST APIs         |
 | Database   | MySQL, Spring Data JPA, Hibernate    |
-| Auth       | JWT (jjwt 0.11.5), Spring Security   |
+| Auth       | JWT (jjwt 0.11.5), custom JwtFilter  |
 | Tools      | Maven, Git, GitHub, Postman          |
 
 ---
@@ -49,16 +49,17 @@ A full-stack web application to track personal expenses with secure user authent
 
 ```
 expense-tracker/
-├── src/                        # Spring Boot Backend
-│   └── main/java/
-│       ├── controller/         # REST API Controllers
-│       ├── service/            # Business Logic
-│       ├── repository/         # Spring Data JPA Repositories
-│       └── model/              # Entity Classes (User, Expense)
+├── src/main/java/com/expensetracker/
+│   ├── config/                 # CorsConfig, JwtFilter, JwtUtil, BrowserLauncher
+│   ├── controller/             # AuthController, ExpenseController, HomeController
+│   ├── model/                  # User, Expense (JPA Entities)
+│   ├── repository/             # UserRepository, ExpenseRepository
+│   └── service/                # ExpenseService, ExpenseServiceImpl
+├── src/main/resources/
+│   └── application.properties
 └── expense-tracker-frontend/   # React Frontend
     └── src/
-        ├── components/         # React Components
-        └── App.js
+        └── components/
 ```
 
 ---
@@ -67,7 +68,7 @@ expense-tracker/
 
 ### Prerequisites
 
-- Java 17+
+- Java 21+
 - Node.js 18+
 - MySQL 8+
 - Maven
@@ -84,7 +85,7 @@ cd expense-tracker
 Open MySQL and run:
 
 ```sql
-CREATE DATABASE expense_tracker;
+CREATE DATABASE expense_db;
 ```
 
 ### 3. Configure Backend
@@ -92,11 +93,10 @@ CREATE DATABASE expense_tracker;
 Edit `src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/expense_tracker
+spring.datasource.url=jdbc:mysql://localhost:3306/expense_db
 spring.datasource.username=your_mysql_username
 spring.datasource.password=your_mysql_password
 spring.jpa.hibernate.ddl-auto=update
-jwt.secret=your_jwt_secret_key
 ```
 
 ### 4. Run the Backend
