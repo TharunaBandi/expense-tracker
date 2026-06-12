@@ -9,13 +9,13 @@ A full-stack web application to track personal expenses with secure user authent
 ## 📸 Screenshots
 
 ### Login
-![Login Page](screenshots/login.png)
+![Login Page](login.png)
 
 ### Register
-![Register Page](screenshots/register.png)
+![Register Page](register.png)
 
 ### Dashboard
-![Expense Tracker Dashboard](screenshots/dashboard.png)
+![Expense Tracker Dashboard](dashboard.png)
 
 ---
 
