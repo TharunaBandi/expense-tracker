@@ -17,8 +17,6 @@ A full-stack web application to track personal expenses with secure user authent
 ### Dashboard
 ![Expense Tracker Dashboard](screenshots/dashboard.png)
 
-> **To add screenshots to the repo:** Create a `screenshots/` folder in the root of your repo and upload the three images named `login.png`, `register.png`, and `dashboard.png`.
-
 ---
 
 ## ✨ Features
